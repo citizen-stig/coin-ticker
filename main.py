@@ -1,6 +1,6 @@
 import sys
-import urwid
 import asyncio
+import urwid
 
 
 from fetchers import get_coinbase_spot_price
@@ -30,15 +30,18 @@ class Dashboard(object):
     def setup_section(self, coin_name, price_value):
         text_color = 'normal'
         prev_price = self.prices.get(coin_name)
-        if prev_price and price_value > prev_price:
-            text_color = 'price_higher'
-        elif prev_price and price_value < prev_price:
-            text_color = 'price_lower'
-        self.prices[coin_name] = price_value
-        price_formatted = '{:10.2f} {}'.format(
-            price_value,
-            self.output_currency[1],
-        ).rjust(10)
+        if price_value is not None:
+            if prev_price and price_value > prev_price:
+                text_color = 'price_higher'
+            elif prev_price and price_value < prev_price:
+                text_color = 'price_lower'
+            self.prices[coin_name] = price_value
+            price_formatted = '{:10.2f} {}'.format(
+                price_value,
+                self.output_currency[1],
+            ).rjust(10)
+        else:
+            price_formatted = 'N/A'
 
         price_text = urwid.Text(
             [
@@ -72,6 +75,10 @@ class Dashboard(object):
             loop.set_alarm_in(self.timer, self.refresh, user_data=data)
 
 
-if __name__ == '__main__':
+def main():
     dashboard = Dashboard()
     sys.exit(dashboard.main())
+
+
+if __name__ == '__main__':
+    main()

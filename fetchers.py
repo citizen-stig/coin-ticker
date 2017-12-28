@@ -11,5 +11,5 @@ def get_coinbase_spot_price(coin, currency):
         data = response.json()
         try:
             return float(data['data']['amount'])
-        except KeyError:
+        except (KeyError, ValueError, IOError):
             pass
